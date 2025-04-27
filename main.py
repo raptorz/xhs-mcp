@@ -10,7 +10,7 @@ from api.xhs_api import XhsApi
 
 from urllib.parse import urlparse, parse_qs
 
-mcp = FastMCP("小红书", debug=False)
+mcp = FastMCP("小红书", debug=False,port=8888)
 
 xhs_cookie=""
 
@@ -139,5 +139,5 @@ async def post_comment(comment:str,url=None) -> str:
 
 
 if __name__ == "__main__":
-    print("启动小红书")
-    mcp.run(transport='stdio')
+    print("启动小红书mcp服务")
+    mcp.run(transport='sse')
