@@ -121,7 +121,7 @@ async def get_note_content(url: str) -> str:
                 result += f"评论数: {comment_count}\n"
                 result += f"收藏数: {collected_count}\n"
                 result += f"链接: {url}\n\n"
-                result += f"内容:\n{note_card.get('desc', '')}"
+                result += f"内容:\n{note_card.get('desc', '')}\n"
                 result += f"封面:\n{cover}"
 
             break
