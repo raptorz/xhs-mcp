@@ -1,28 +1,33 @@
 # 小红书MCP服务
 ## 特点
-* 采用js逆向出x-s,x-t,直接请求http接口,无须笨重的playwright
-* 搜索笔记
-* 获取笔记内容
-* 获取笔记的评论
-* 发表评论
+- [x] 采用js逆向出x-s,x-t,直接请求http接口,无须笨重的playwright
+- [x] 搜索笔记
+- [x] 获取笔记内容
+- [x] 获取笔记的评论
+- [x] 发表评论
 
-![特性](./docs/feature.png)
+![特性](https://raw.githubusercontent.com/jobsonlook/xhs-mcp/master/docs/feature.png)
 
 ## 快速开始
 
 ### 1. 环境
  * node
  * python 3.12
+ * uv (pip install uv)
 
 ### 2. 安装依赖
 ```sh
- uv sync 
+
+git clone git@github.com:jobsonlook/xhs-mcp.git
+
+uv sync 
+
 ```
 
 ### 3. 获取小红书的cookie
 [打开web小红书](https://www.xiaohongshu.com/explore)
 登录后，获取cookie
-![cookie](./docs/cookie.png)
+![cookie](https://raw.githubusercontent.com/jobsonlook/xhs-mcp/master/docs/cookie.png)
 
 ### 4. 配置mcp server
 
@@ -38,7 +43,7 @@
                 "main.py"
             ],
             "env": {
-                "XHS_COOKIE": "xhs_pc_t=xxxx"
+                "XHS_COOKIE": "xxxx"
             },
         }
     }
