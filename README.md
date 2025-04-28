@@ -20,6 +20,7 @@
 
 git clone git@github.com:jobsonlook/xhs-mcp.git
 
+cd xhs-mcp
 uv sync 
 
 ```
