@@ -7,12 +7,16 @@ from mcp.server.fastmcp import FastMCP,Context
 
 import requests
 from api.xhs_api import XhsApi
-
+import logging
 from urllib.parse import urlparse, parse_qs
 
-mcp = FastMCP("小红书", debug=False,port=8888)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
-xhs_cookie=""
+mcp = FastMCP("小红书")
+
+
+xhs_cookie=os.getenv('XHS_COOKIE')
 
 
 
@@ -37,7 +41,7 @@ async def search_notes(keywords: str) -> str:
     """
     xhs_api = XhsApi(cookie=xhs_cookie)
     data= await xhs_api.search_notes(keywords)
-    print(f'keywords:{keywords},data:{data}')
+    logger.info(f'keywords:{keywords},data:{data}')
     result = "搜索结果：\n\n"
     if 'data' in data and 'items' in data['data'] and len(data['data']['items'])>0:
         for i in range(0,len(data['data']['items'])):
@@ -63,7 +67,7 @@ async def get_note_content(url=None) -> str:
     xhs_api = XhsApi(cookie=xhs_cookie)
     params=get_nodeid_token(url)
     data = await xhs_api.get_note_content(**params)
-    print(f'url:{url},params:{params},data:{data}')
+    logger.info(f'url:{url},params:{params},data:{data}')
     result = ""
     if 'data' in data and 'items' in data['data'] and len(data['data']['items']) > 0:
         for i in range(0, len(data['data']['items'])):
@@ -105,7 +109,7 @@ async def get_note_comments(url=None) -> str:
     params=get_nodeid_token(url)
 
     data =  await xhs_api.get_note_comments(**params)
-    print(f'url:{url},params:{params},data:{data}')
+    logger.info(f'url:{url},params:{params},data:{data}')
 
     result=""
     if 'data' in data and 'comments' in data['data'] and len(data['data']['comments'])>0:
@@ -136,8 +140,6 @@ async def post_comment(comment:str,url=None) -> str:
     else:
         return "回复失败"
 
-
-
 if __name__ == "__main__":
-    print("启动小红书mcp服务")
-    mcp.run(transport='sse')
+    logger.info("mcp run")
+    mcp.run()

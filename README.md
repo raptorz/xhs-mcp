@@ -12,7 +12,7 @@
 
 ### 1. 环境
  * node
- * python >=3.12
+ * python 3.12
 
 ### 2. 安装依赖
 ```sh
@@ -20,9 +20,9 @@
 ```
 
 ### 3. 获取小红书的cookie
-    * [打开web小红书](https://www.xiaohongshu.com/explore)
-    * 登录后，获取cookie
-    ![cookie](./docs/cookie.png)
+[打开web小红书](https://www.xiaohongshu.com/explore)
+登录后，获取cookie
+![cookie](./docs/cookie.png)
 
 ### 4. 配置mcp server
 
@@ -30,11 +30,16 @@
 {
     "mcpServers": {
         "xhs-mcp": {
-            "command": "/Users/xxx/xhs-mcp/.venv/bin/python",
+            "command": "uv",
             "args": [
-                "/Users/xxx/xhs-mcp/xhs-mcp/main.py",
-                "--stdio"
-            ]
+                "--directory",
+                "/Users/xxx/xhs-mcp",
+                "run",
+                "main.py"
+            ],
+            "env": {
+                "XHS_COOKIE": "xhs_pc_t=xxxx"
+            },
         }
     }
 }
