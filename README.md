@@ -44,7 +44,7 @@ uv sync
             ],
             "env": {
                 "XHS_COOKIE": "xxxx"
-            },
+            }
         }
     }
 }
