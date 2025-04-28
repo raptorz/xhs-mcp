@@ -18,7 +18,7 @@ mcp = FastMCP("小红书")
 
 xhs_cookie=os.getenv('XHS_COOKIE')
 
-
+xhs_api = XhsApi(cookie=xhs_cookie)
 
 def get_nodeid_token(url=None,note_id=None, xsec_token=None):
     if note_id is not None and xsec_token is not None:
@@ -33,13 +33,30 @@ def get_nodeid_token(url=None,note_id=None, xsec_token=None):
         xsec_token=xsec_token_list[0]
     return  {"note_id":note_id, "xsec_token":xsec_token}
 @mcp.tool()
+async def check_cookie() -> str:
+    """检测cookie是否失效
+
+    """
+    try:
+        data = await xhs_api.get_me()
+
+        if 'success' in data and data['success'] == True:
+            return "cookie有效"
+        else:
+            return "cookie已失效"
+    except Exception as e:
+        logger.error(e)
+        return "cookie已失效"
+
+
+@mcp.tool()
 async def search_notes(keywords: str) -> str:
     """根据关键词搜索笔记
 
         Args:
             keywords: 搜索关键词
     """
-    xhs_api = XhsApi(cookie=xhs_cookie)
+
     data= await xhs_api.search_notes(keywords)
     logger.info(f'keywords:{keywords},data:{data}')
     result = "搜索结果：\n\n"
@@ -64,7 +81,6 @@ async def get_note_content(url=None) -> str:
     Args:
         url: 笔记 URL
     """
-    xhs_api = XhsApi(cookie=xhs_cookie)
     params=get_nodeid_token(url)
     data = await xhs_api.get_note_content(**params)
     logger.info(f'url:{url},params:{params},data:{data}')
@@ -105,7 +121,6 @@ async def get_note_comments(url=None) -> str:
         url: 笔记 URL
 
     """
-    xhs_api = XhsApi(cookie=xhs_cookie)
     params=get_nodeid_token(url)
 
     data =  await xhs_api.get_note_comments(**params)
@@ -132,7 +147,6 @@ async def post_comment(comment:str,url=None) -> str:
         url: 笔记 URL
         comment: 要发布的评论内容
     """
-    xhs_api = XhsApi(cookie=xhs_cookie)
     params=get_nodeid_token(url)
     response= await xhs_api.post_comment(params['note_id'],comment)
     if 'success' in response and response['success']==True:

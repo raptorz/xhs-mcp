@@ -82,6 +82,10 @@ class XhsApi:
         file_path = os.path.join(current_directory, "xhsvm.js")
         return execjs.compile(open(file_path, 'r', encoding='utf-8').read()).call('GetXsXt', uri, data, cookie)
 
+    async def get_me(self) -> Dict:
+        uri = '/api/sns/web/v2/user/me'
+        return await self.request(uri,method="GET")
+
     async def search_notes(self, keywords: str, limit: int = 20) -> Dict:
         data={
             "keyword":keywords,
