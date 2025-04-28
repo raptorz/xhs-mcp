@@ -27,7 +27,7 @@ uv sync
 
 ### 3. 获取小红书的cookie
 [打开web小红书](https://www.xiaohongshu.com/explore)
-登录后，获取cookie
+登录后，获取cookie，将cookie配置到第4步的 XHS_COOKIE 环境变量中
 ![cookie](https://raw.githubusercontent.com/jobsonlook/xhs-mcp/master/docs/cookie.png)
 
 ### 4. 配置mcp server
