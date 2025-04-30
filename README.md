@@ -1,3 +1,4 @@
+[![smithery badge](https://smithery.ai/badge/@jobsonlook/xhs-mcp)](https://smithery.ai/server/@jobsonlook/xhs-mcp)
 # 小红书MCP服务
 ## 特点
 - [x] 采用js逆向出x-s,x-t,直接请求http接口,无须笨重的playwright
