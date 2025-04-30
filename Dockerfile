@@ -31,4 +31,4 @@ ENV PYTHONUNBUFFERED=1
 
 
 # 启动命令
-CMD ["uv", "--directory","/app/xhs-mcp","run","main.py"]
+CMD ["uv", "--directory","/app","run","main.py"]
