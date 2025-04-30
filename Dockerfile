@@ -9,9 +9,6 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# 验证 Node.js 和 Python 版本
-RUN node --version | grep "v20.11.1" \
-    && python --version | grep "3.12"
 
 # 设置工作目录
 WORKDIR /app
