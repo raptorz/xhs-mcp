@@ -1,3 +1,4 @@
+# Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
 
 startCommand:
   type: stdio
@@ -5,14 +6,14 @@ startCommand:
     # JSON Schema defining the configuration options for the MCP.
     type: object
     required:
-      - XHS_COOKIE
+      - xhsCookie
     properties:
-      XHS_COOKIE:
+      xhsCookie:
         type: string
-        description: The cookie for the xiaohongshu.
+        description: The cookie string for Xiaohongshu authentication (XHS_COOKIE).
   commandFunction:
-    # A function that produces the CLI command to start the MCP on stdio.
+    # A JS function that produces the CLI command based on the given config to start the MCP on stdio.
     |-
-    config=>({command:'uv',args:['--directory','/app','run','main.py'],env:{XHS_COOKIE:config.XHS_COOKIE}})
-
-
+    (config) => ({ command: 'uv', args: ['--directory','/app','run','main.py'], env: { XHS_COOKIE: config.xhsCookie } })
+  exampleConfig:
+    xhsCookie: your_cookie_here
