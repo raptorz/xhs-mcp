@@ -1,4 +1,3 @@
-[![smithery badge](https://smithery.ai/badge/@jobsonlook/xhs-mcp)](https://smithery.ai/server/@jobsonlook/xhs-mcp)
 # 小红书MCP服务
 [![smithery badge](https://smithery.ai/badge/@jobsonlook/xhs-mcp)](https://smithery.ai/server/@jobsonlook/xhs-mcp)
 ## 特点
