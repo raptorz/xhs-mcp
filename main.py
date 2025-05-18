@@ -78,7 +78,7 @@ async def search_notes(keywords: str) -> str:
                 liked_count = item['note_card']['interact_info']['liked_count']
                 # cover=item['note_card']['cover']['url_default']
                 url = f'https://www.xiaohongshu.com/explore/{item["id"]}?xsec_token={item["xsec_token"]}'
-                result += f"{i}. {title}  \n 点赞数:{liked_count} \n   链接: {url} \n\n"
+                result += f"{i}. {title}  \n 点赞数:{liked_count} \n   链接: {url} \n note_id:{item['id']} \n xsec_token:{item['xsec_token']}  \n\n"
     else:
         result = await check_cookie()
         if "有效" in result:
@@ -87,15 +87,16 @@ async def search_notes(keywords: str) -> str:
 
 
 @mcp.tool()
-async def get_note_content(url: str) -> str:
+async def get_note_content(note_id: str, xsec_token: str) -> str:
     """获取笔记内容
 
     Args:
-        url: 笔记 URL
+        note_id: 笔记 note_id
+        xsec_token: 笔记 xsec_token
     """
-    params = get_nodeid_token(url)
+    params = get_nodeid_token(url=None, note_id=note_id, xsec_token=xsec_token)
     data = await xhs_api.get_note_content(**params)
-    logger.info(f'url:{url},params:{params},data:{data}')
+    logger.info(f'note_id:{note_id},xsec_token:{xsec_token},data:{data}')
     result = ""
     if 'data' in data and 'items' in data['data'] and len(data['data']['items']) > 0:
         for i in range(0, len(data['data']['items'])):
@@ -133,17 +134,19 @@ async def get_note_content(url: str) -> str:
 
 
 @mcp.tool()
-async def get_note_comments(url: str) -> str:
+async def get_note_comments(note_id: str, xsec_token: str) -> str:
     """获取笔记评论
 
     Args:
-        url: 笔记 URL
+        note_id: 笔记 note_id
+        xsec_token: 笔记 xsec_token
+    
 
     """
-    params = get_nodeid_token(url)
+    params = get_nodeid_token(url=None, note_id=note_id, xsec_token=xsec_token)
 
     data = await xhs_api.get_note_comments(**params)
-    logger.info(f'url:{url},params:{params},data:{data}')
+    logger.info(f'note_id:{note_id},xsec_token:{xsec_token},data:{data}')
 
     result = ""
     if 'data' in data and 'comments' in data['data'] and len(data['data']['comments']) > 0:
@@ -162,15 +165,15 @@ async def get_note_comments(url: str) -> str:
 
 
 @mcp.tool()
-async def post_comment(comment: str, url: str) -> str:
+async def post_comment(comment: str, note_id: str) -> str:
     """发布评论到指定笔记
 
     Args:
-        url: 笔记 URL
+        note_id: 笔记 note_id
         comment: 要发布的评论内容
     """
-    params = get_nodeid_token(url)
-    response = await xhs_api.post_comment(params['note_id'], comment)
+    # params = get_nodeid_token(url)
+    response = await xhs_api.post_comment(note_id, comment)
     if 'success' in response and response['success'] == True:
         return "回复成功"
     else:
