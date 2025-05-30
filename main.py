@@ -63,7 +63,7 @@ async def check_cookie() -> str:
 
 
 @mcp.tool()
-async def search_notes() -> str:
+async def home_feed() -> str:
     """获取首页推荐笔记
 
     """
