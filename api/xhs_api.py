@@ -100,6 +100,33 @@ class XhsApi:
         }
         return await self.request("/api/sns/web/v1/search/notes",method="POST",data=data)
 
+    async def home_feed(self) -> Dict:
+
+        data={
+            "category":"homefeed_recommend",
+            "cursor_score":"",
+            "image_formats":json.dumps(["jpg","webp","avif"], separators=(",", ":")),
+            "need_filter_image":False,
+            "need_num":8,
+            "num":18,
+            "note_index":33,
+            "refresh_type":1,
+            "search_key":"",
+            "unread_begin_note_id":"",
+            "unread_end_note_id":"",
+            "unread_note_count":0
+        }
+        uri="/api/sns/web/v1/homefeed"
+        p={"uri":uri,"method":"POST","data":data}
+        headers = {
+            'content-type': 'application/json;charset=UTF-8',
+            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36',
+        }
+        xsxt=json.loads(self.get_xs_xt(uri,data,self._cookie))
+        headers['x-s']=xsxt['X-s']
+        headers['x-t']=str(xsxt['X-t'])
+        return await self.request(**p,headers=headers)
+
 
     async def get_note_content(self, note_id: str, xsec_token: str) -> Dict:
         data = {
@@ -153,5 +180,4 @@ class XhsApi:
         headers['x-s'] = xsxt['X-s']
         headers['x-t'] = str(xsxt['X-t'])
         return await self.request(uri, method="POST",headers=headers, data=data)
-
 

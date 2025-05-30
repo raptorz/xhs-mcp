@@ -28,8 +28,10 @@ xhs_cookie = os.getenv('XHS_COOKIE')
 xhs_api = XhsApi(cookie=xhs_cookie)
 
 
-def get_nodeid_token(url=None, note_id=None, xsec_token=None):
-    if note_id is not None and xsec_token is not None:
+def get_nodeid_token(url=None, note_ids=None):
+    if note_ids is not None:
+        note_id = note_ids[0,24]
+        xsec_token = note_ids[24:]
         return {"note_id": note_id, "xsec_token": xsec_token}
     parsed_url = urlparse(url)
     query_params = parse_qs(parsed_url.query)
@@ -59,6 +61,29 @@ async def check_cookie() -> str:
         return "cookie已失效"
 
 
+
+@mcp.tool()
+async def search_notes() -> str:
+    """获取首页推荐笔记
+
+    """
+    data = await xhs_api.home_feed()
+    result = "搜索结果：\n\n"
+    if 'data' in data and 'items' in data['data'] and len(data['data']['items']) > 0:
+        for i in range(0, len(data['data']['items'])):
+            item = data['data']['items'][i]
+            if 'note_card' in item and 'display_title' in item['note_card']:
+                title = item['note_card']['display_title']
+                liked_count = item['note_card']['interact_info']['liked_count']
+                # cover=item['note_card']['cover']['url_default']
+                url = f'https://www.xiaohongshu.com/explore/{item["id"]}?xsec_token={item["xsec_token"]}'
+                result += f"{i}. {title}  \n 点赞数:{liked_count} \n   链接: {url}  \n\n"
+    else:
+        result = await check_cookie()
+        if "有效" in result:
+            result = f"未找到相关的笔记"
+    return result
+
 @mcp.tool()
 async def search_notes(keywords: str) -> str:
     """根据关键词搜索笔记
@@ -78,7 +103,7 @@ async def search_notes(keywords: str) -> str:
                 liked_count = item['note_card']['interact_info']['liked_count']
                 # cover=item['note_card']['cover']['url_default']
                 url = f'https://www.xiaohongshu.com/explore/{item["id"]}?xsec_token={item["xsec_token"]}'
-                result += f"{i}. {title}  \n 点赞数:{liked_count} \n   链接: {url} \n note_id:{item['id']} \n xsec_token:{item['xsec_token']}  \n\n"
+                result += f"{i}. {title}  \n 点赞数:{liked_count} \n   链接: {url}  \n\n"
     else:
         result = await check_cookie()
         if "有效" in result:
@@ -87,16 +112,15 @@ async def search_notes(keywords: str) -> str:
 
 
 @mcp.tool()
-async def get_note_content(note_id: str, xsec_token: str) -> str:
-    """获取笔记内容
+async def get_note_content(url: str) -> str:
+    """获取笔记内容,参数url要带上xsec_token
 
     Args:
-        note_id: 笔记 note_id
-        xsec_token: 笔记 xsec_token
+        url: 笔记 url
     """
-    params = get_nodeid_token(url=None, note_id=note_id, xsec_token=xsec_token)
+    params = get_nodeid_token(url=url)
     data = await xhs_api.get_note_content(**params)
-    logger.info(f'note_id:{note_id},xsec_token:{xsec_token},data:{data}')
+    logger.info(f'url:{url},data:{data}')
     result = ""
     if 'data' in data and 'items' in data['data'] and len(data['data']['items']) > 0:
         for i in range(0, len(data['data']['items'])):
@@ -134,19 +158,18 @@ async def get_note_content(note_id: str, xsec_token: str) -> str:
 
 
 @mcp.tool()
-async def get_note_comments(note_id: str, xsec_token: str) -> str:
-    """获取笔记评论
+async def get_note_comments(url: str) -> str:
+    """获取笔记评论,参数url要带上xsec_token
 
     Args:
-        note_id: 笔记 note_id
-        xsec_token: 笔记 xsec_token
+        url: 笔记 url
     
 
     """
-    params = get_nodeid_token(url=None, note_id=note_id, xsec_token=xsec_token)
+    params = get_nodeid_token(url=url)
 
     data = await xhs_api.get_note_comments(**params)
-    logger.info(f'note_id:{note_id},xsec_token:{xsec_token},data:{data}')
+    logger.info(f'url:{url},data:{data}')
 
     result = ""
     if 'data' in data and 'comments' in data['data'] and len(data['data']['comments']) > 0:
