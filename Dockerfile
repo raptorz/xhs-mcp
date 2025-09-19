@@ -3,8 +3,8 @@
 FROM python:3.12-slim
 
 # 安装 Node.js 20.11.1
-RUN apt-get update && apt-get install -y \
-    curl \
+RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list.d/debian.sources \
+    && apt-get update && apt-get install -y curl \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
     && apt-get clean \
@@ -15,13 +15,13 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # 复制项目文件
-COPY . /app/
+COPY . .
 
 # 安装 uv
-RUN pip install uv
+RUN pip install uv -i https://mirrors.aliyun.com/pypi/simple/
 
 # 使用 uv 安装项目依赖
-RUN uv sync
+RUN uv sync -i https://mirrors.aliyun.com/pypi/simple/
 
 # 设置环境变量
 ENV PYTHONUNBUFFERED=1
@@ -29,4 +29,4 @@ ENV PYTHONUNBUFFERED=1
 
 
 # 启动命令
-CMD ["uv", "--directory","/app","run","main.py"]
+CMD ["uv", "--directory","/app","run","xhs_mcp/__main__.py"]
